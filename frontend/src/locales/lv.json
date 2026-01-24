@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "myStreams": "Mani straumi",
+    "pricing": "Cenas",
+    "contact": "Kontakti"
+  },
+  "hero": {
+    "title1": "Pārvērtiet tiešraides komentārus",
+    "title2": "pārdošanā acumirklī",
+    "subtitle": "AI platforma tiešraides pārdevējiem. Importējiet video URL, ļaujiet AI izvilkt pasūtījumus no komentāriem un pārvaldiet visu vienuviet.",
+    "placeholder": "https://www.facebook.com/1234567890/videos/1234567890",
+    "findButton": "Atrast",
+    "tagline": "Ietaupiet stundas manuāla darba katru dienu"
+  },
+  "features": {
+    "title": "Kāpēc Soclix?",
+    "subtitle": "Viss, kas nepieciešams efektīvai tiešraides pārdošanas pārvaldībai",
+    "aiPowered": {
+      "title": "AI ekstrakcija",
+      "description": "Mūsu AI automātiski identificē un izvelk klientu pasūtījumus no komentāriem."
+    },
+    "saveHours": {
+      "title": "Ietaupiet laiku",
+      "description": "Pārtrauciet manuāli ritināt tūkstošiem komentāru. Ļaujiet automatizācijai strādāt."
+    },
+    "realTime": {
+      "title": "Reāllaika apstrāde",
+      "description": "Komentāri tiek apstrādāti uzreiz, dodot tūlītēju pasūtījumu redzamību."
+    },
+    "analytics": {
+      "title": "Viedā analītika",
+      "description": "Sekojiet pārdošanas rezultātiem ar detalizētiem pārskatiem un statistiku."
+    }
+  },
+  "howItWorks": {
+    "title": "Kā tas darbojas",
+    "subtitle": "Trīs vienkārši soļi tiešraides pārdošanas automatizācijai",
+    "step1": {
+      "title": "Ielīmējiet URL",
+      "description": "Nokopējiet sava strauma URL un ielīmējiet to Soclix"
+    },
+    "step2": {
+      "title": "AI izvelk",
+      "description": "Mūsu AI skenē visus komentārus un identificē pasūtījumus"
+    },
+    "step3": {
+      "title": "Pārvaldiet un eksportējiet",
+      "description": "Pārskatiet pasūtījumus, pārvaldiet klientus un eksportējiet uz Excel"
+    }
+  },
+  "cta": {
+    "title": "Gatavi optimizēt pārdošanu?",
+    "subtitle": "Pievienojieties tūkstošiem pārdevēju, kas ietaupa stundas katru dienu",
+    "button": "Sākt bez maksas"
+  },
+  "streams": {
+    "title": "Mani straumi",
+    "subtitle": "Pārvaldiet straumu ierakstus un pasūtījumus",
+    "addStream": "Pievienot straumu",
+    "search": "Meklēt straumus...",
+    "filters": "Filtri",
+    "totalStreams": "Kopā straumu",
+    "comments": "Komentāri",
+    "orders": "Pasūtījumi",
+    "revenue": "Ieņēmumi",
+    "noStreams": "Nav straumu",
+    "addFirst": "Pievienojiet savu pirmo straumu",
+    "selectStream": "Izvēlieties straumu",
+    "clickToView": "Noklikšķiniet uz strauma, lai skatītu pasūtījumus",
+    "noOrders": "Šim straumam nav atrasti pasūtījumi",
+    "addNewStream": "Pievienot jaunu straumu",
+    "streamUrl": "Strauma URL",
+    "urlHelp": "Ielīmējiet Facebook, Instagram vai TikTok strauma URL.",
+    "cancel": "Atcelt",
+    "openUrl": "Atvērt URL",
+    "exportExcel": "Eksportēt uz Excel",
+    "delete": "Dzēst",
+    "completed": "Pabeigts",
+    "processing": "Apstrādā",
+    "failed": "Kļūda",
+    "pending": "Gaida",
+    "confirmed": "Apstiprināts",
+    "shipped": "Nosūtīts"
+  },
+  "pricing": {
+    "title": "Vienkāršas un caurspīdīgas cenas",
+    "subtitle": "Izvēlieties plānu, kas atbilst jūsu biznesam. Visi plāni ietver 14 dienu izmēģinājumu.",
+    "mostPopular": "Populārākais",
+    "perMonth": "/mēnesī",
+    "starter": {
+      "name": "Sākuma",
+      "description": "Ideāls sākumam",
+      "feature1": "5 straumi mēnesī",
+      "feature2": "Līdz 500 komentāriem/straumam",
+      "feature3": "Eksports uz Excel",
+      "feature4": "E-pasta atbalsts",
+      "button": "Sākt bez maksas"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Profesionāliem pārdevējiem",
+      "feature1": "Neierobežoti straumi",
+      "feature2": "Neierobežoti komentāri",
+      "feature3": "Paplašināta analītika",
+      "feature4": "Prioritārs atbalsts",
+      "feature5": "API piekļuve",
+      "feature6": "Automātiski paziņojumi",
+      "button": "Izvēlēties Pro"
+    },
+    "enterprise": {
+      "name": "Uzņēmumiem",
+      "description": "Lielām komandām",
+      "feature1": "Viss no Pro",
+      "feature2": "Personīgais menedžeris",
+      "feature3": "Pielāgotas integrācijas",
+      "feature4": "SLA garantija",
+      "feature5": "Komandas apmācība",
+      "feature6": "White-label opcija",
+      "button": "Sazināties"
+    },
+    "faq": {
+      "title": "Biežāk uzdotie jautājumi",
+      "q1": "Kādas platformas tiek atbalstītas?",
+      "a1": "Soclix atbalsta Facebook Live, Instagram Live un TikTok Live. Drīzumā pievienosim YouTube Live.",
+      "q2": "Vai varu atcelt abonementu jebkurā laikā?",
+      "a2": "Jā! Jūs varat atcelt abonementu jebkurā laikā bez maksas. Konts paliks aktīvs līdz norēķinu perioda beigām.",
+      "q3": "Cik precīza ir AI ekstrakcija?",
+      "a3": "Mūsu AI modelis sasniedz vairāk nekā 95% precizitāti pasūtījumu identificēšanā. Mēs pastāvīgi uzlabojam algoritmu."
+    }
+  },
+  "contact": {
+    "title": "Sazinieties ar mums",
+    "subtitle": "Ir jautājumi? Mēs labprāt palīdzēsim. Nosūtiet ziņojumu, un mēs atbildēsim pēc iespējas ātrāk.",
+    "email": "E-pasts",
+    "emailValue": "hello@soclix.pl",
+    "emailDesc": "Atbildam 24 stundu laikā",
+    "phone": "Tālrunis",
+    "phoneValue": "+48 123 456 789",
+    "phoneDesc": "P-Pk 9:00-17:00",
+    "office": "Birojs",
+    "officeValue": "Varšava, Polija",
+    "officeDesc": "Apmeklējiet mūsu biroju",
+    "quickResponse": "Ātra atbilde",
+    "quickResponseDesc": "Mūsu komanda parasti atbild 2-4 stundu laikā darba dienās.",
+    "yourName": "Jūsu vārds",
+    "emailAddress": "E-pasta adrese",
+    "subject": "Tēma",
+    "subjectPlaceholder": "Kā mēs varam palīdzēt?",
+    "message": "Ziņojums",
+    "messagePlaceholder": "Pastāstiet vairāk par savu pieprasījumu...",
+    "sendMessage": "Sūtīt ziņojumu",
+    "messageSent": "Ziņojums nosūtīts!",
+    "thankYou": "Paldies par sazināšanos. Mēs drīz atbildēsim."
+  },
+  "footer": {
+    "description": "AI platforma tiešraides pārdevējiem. Pārvērtiet komentārus pārdošanā acumirklī.",
+    "product": "Produkts",
+    "company": "Uzņēmums",
+    "about": "Par mums",
+    "privacyPolicy": "Privātuma politika",
+    "termsOfService": "Lietošanas noteikumi",
+    "api": "API",
+    "copyright": "© 2025 Soclix. Visas tiesības aizsargātas."
+  },
+  "languages": {
+    "en": "English",
+    "ru": "Русский",
+    "pl": "Polski",
+    "lv": "Latviešu",
+    "uk": "Українська",
+    "be": "Беларуская"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "myStreams": "Moje streamy",
+    "pricing": "Cennik",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "title1": "Zamień komentarze ze streama",
+    "title2": "w sprzedaż natychmiast",
+    "subtitle": "Platforma AI dla sprzedawców na żywo. Zaimportuj URL wideo, pozwól AI wyodrębnić zamówienia z komentarzy i zarządzaj wszystkim w jednym miejscu.",
+    "placeholder": "https://www.facebook.com/1234567890/videos/1234567890",
+    "findButton": "Znajdź",
+    "tagline": "Oszczędzaj godziny pracy ręcznej każdego dnia"
+  },
+  "features": {
+    "title": "Dlaczego Soclix?",
+    "subtitle": "Wszystko, czego potrzebujesz do efektywnego zarządzania sprzedażą na streamach",
+    "aiPowered": {
+      "title": "Ekstrakcja AI",
+      "description": "Nasz AI automatycznie identyfikuje i wyodrębnia zamówienia klientów z komentarzy."
+    },
+    "saveHours": {
+      "title": "Oszczędność czasu",
+      "description": "Przestań ręcznie przeglądać tysiące komentarzy. Pozwól automatyzacji wykonać pracę."
+    },
+    "realTime": {
+      "title": "Przetwarzanie w czasie rzeczywistym",
+      "description": "Komentarze są przetwarzane na bieżąco, dając Ci natychmiastowy wgląd w zamówienia."
+    },
+    "analytics": {
+      "title": "Inteligentna analityka",
+      "description": "Śledź wyniki sprzedaży dzięki szczegółowym raportom i statystykom."
+    }
+  },
+  "howItWorks": {
+    "title": "Jak to działa",
+    "subtitle": "Trzy proste kroki do automatyzacji sprzedaży na streamach",
+    "step1": {
+      "title": "Wklej URL",
+      "description": "Skopiuj URL swojego streama i wklej go do Soclix"
+    },
+    "step2": {
+      "title": "AI wyodrębnia",
+      "description": "Nasz AI skanuje wszystkie komentarze i identyfikuje zamówienia"
+    },
+    "step3": {
+      "title": "Zarządzaj i eksportuj",
+      "description": "Przeglądaj zamówienia, zarządzaj klientami i eksportuj do Excel"
+    }
+  },
+  "cta": {
+    "title": "Gotowy usprawnić sprzedaż?",
+    "subtitle": "Dołącz do tysięcy sprzedawców, którzy oszczędzają godziny każdego dnia",
+    "button": "Zacznij za darmo"
+  },
+  "streams": {
+    "title": "Moje streamy",
+    "subtitle": "Zarządzaj nagraniami streamów i zamówieniami",
+    "addStream": "Dodaj stream",
+    "search": "Szukaj streamów...",
+    "filters": "Filtry",
+    "totalStreams": "Łącznie streamów",
+    "comments": "Komentarze",
+    "orders": "Zamówienia",
+    "revenue": "Przychód",
+    "noStreams": "Brak streamów",
+    "addFirst": "Dodaj swój pierwszy stream",
+    "selectStream": "Wybierz stream",
+    "clickToView": "Kliknij stream, aby zobaczyć zamówienia",
+    "noOrders": "Nie znaleziono zamówień dla tego streama",
+    "addNewStream": "Dodaj nowy stream",
+    "streamUrl": "URL streama",
+    "urlHelp": "Wklej URL swojego streama z Facebook, Instagram lub TikTok.",
+    "cancel": "Anuluj",
+    "openUrl": "Otwórz URL",
+    "exportExcel": "Eksport do Excel",
+    "delete": "Usuń",
+    "completed": "Zakończony",
+    "processing": "Przetwarzanie",
+    "failed": "Błąd",
+    "pending": "Oczekujące",
+    "confirmed": "Potwierdzone",
+    "shipped": "Wysłane"
+  },
+  "pricing": {
+    "title": "Proste i przejrzyste ceny",
+    "subtitle": "Wybierz plan odpowiedni dla Twojego biznesu. Wszystkie plany zawierają 14-dniowy okres próbny.",
+    "mostPopular": "Najpopularniejszy",
+    "perMonth": "/miesiąc",
+    "starter": {
+      "name": "Starter",
+      "description": "Idealny na początek",
+      "feature1": "5 streamów miesięcznie",
+      "feature2": "Do 500 komentarzy/stream",
+      "feature3": "Eksport do Excel",
+      "feature4": "Wsparcie email",
+      "button": "Zacznij za darmo"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Dla profesjonalnych sprzedawców",
+      "feature1": "Nieograniczone streamy",
+      "feature2": "Nieograniczone komentarze",
+      "feature3": "Zaawansowana analityka",
+      "feature4": "Priorytetowe wsparcie",
+      "feature5": "Dostęp do API",
+      "feature6": "Automatyczne powiadomienia",
+      "button": "Wybierz Pro"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Dla dużych zespołów",
+      "feature1": "Wszystko z Pro",
+      "feature2": "Dedykowany manager",
+      "feature3": "Niestandardowe integracje",
+      "feature4": "Gwarancja SLA",
+      "feature5": "Szkolenia zespołu",
+      "feature6": "Opcja white-label",
+      "button": "Skontaktuj się"
+    },
+    "faq": {
+      "title": "Najczęściej zadawane pytania",
+      "q1": "Jakie platformy są obsługiwane?",
+      "a1": "Soclix obsługuje Facebook Live, Instagram Live i TikTok Live. Wkrótce dodamy wsparcie dla YouTube Live.",
+      "q2": "Czy mogę anulować subskrypcję w dowolnym momencie?",
+      "a2": "Tak! Możesz anulować subskrypcję w dowolnym momencie bez żadnych opłat. Twoje konto pozostanie aktywne do końca okresu rozliczeniowego.",
+      "q3": "Jak dokładna jest ekstrakcja AI?",
+      "a3": "Nasz model AI osiąga ponad 95% dokładności w identyfikacji zamówień z komentarzy. Ciągle ulepszamy algorytm."
+    }
+  },
+  "contact": {
+    "title": "Skontaktuj się",
+    "subtitle": "Masz pytania? Chętnie pomożemy. Wyślij wiadomość, a odpowiemy tak szybko, jak to możliwe.",
+    "email": "Email",
+    "emailValue": "hello@soclix.pl",
+    "emailDesc": "Odpowiadamy w ciągu 24 godzin",
+    "phone": "Telefon",
+    "phoneValue": "+48 123 456 789",
+    "phoneDesc": "Pon-Pt 9:00-17:00",
+    "office": "Biuro",
+    "officeValue": "Warszawa, Polska",
+    "officeDesc": "Odwiedź naszą siedzibę",
+    "quickResponse": "Szybka odpowiedź",
+    "quickResponseDesc": "Nasz zespół zazwyczaj odpowiada w ciągu 2-4 godzin w dni robocze.",
+    "yourName": "Twoje imię",
+    "emailAddress": "Adres email",
+    "subject": "Temat",
+    "subjectPlaceholder": "W czym możemy pomóc?",
+    "message": "Wiadomość",
+    "messagePlaceholder": "Opowiedz więcej o swoim zapytaniu...",
+    "sendMessage": "Wyślij wiadomość",
+    "messageSent": "Wiadomość wysłana!",
+    "thankYou": "Dziękujemy za kontakt. Wkrótce się odezwiemy."
+  },
+  "footer": {
+    "description": "Platforma AI dla sprzedawców na żywo. Zamieniaj komentarze w sprzedaż natychmiast.",
+    "product": "Produkt",
+    "company": "Firma",
+    "about": "O nas",
+    "privacyPolicy": "Polityka prywatności",
+    "termsOfService": "Regulamin",
+    "api": "API",
+    "copyright": "© 2025 Soclix. Wszelkie prawa zastrzeżone."
+  },
+  "languages": {
+    "en": "English",
+    "ru": "Русский",
+    "pl": "Polski",
+    "lv": "Latviešu",
+    "uk": "Українська",
+    "be": "Беларуская"
+  }
+}
