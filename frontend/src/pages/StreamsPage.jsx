@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Search, Filter, MoreVertical, Play, Download, Trash2, ExternalLink, MessageSquare, ShoppingCart, TrendingUp } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -8,6 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { mockStreams, mockOrders } from '../data/mockData';
 
 const StreamsPage = () => {
+  const { t } = useTranslation();
   const [streams, setStreams] = useState(mockStreams);
   const [selectedStream, setSelectedStream] = useState(null);
   const [newStreamUrl, setNewStreamUrl] = useState('');
@@ -44,13 +46,24 @@ const StreamsPage = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Completed</Badge>;
+        return <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{t('streams.completed')}</Badge>;
       case 'processing':
-        return <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Processing</Badge>;
+        return <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">{t('streams.processing')}</Badge>;
       case 'failed':
-        return <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Failed</Badge>;
+        return <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">{t('streams.failed')}</Badge>;
       default:
         return <Badge variant="secondary">Unknown</Badge>;
+    }
+  };
+
+  const getOrderStatusBadge = (status) => {
+    switch (status) {
+      case 'confirmed':
+        return <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs">{t('streams.confirmed')}</Badge>;
+      case 'shipped':
+        return <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs">{t('streams.shipped')}</Badge>;
+      default:
+        return <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs">{t('streams.pending')}</Badge>;
     }
   };
 
@@ -64,25 +77,25 @@ const StreamsPage = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Streams</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your live stream recordings and orders</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('streams.title')}</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">{t('streams.subtitle')}</p>
           </div>
           
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
                 <Plus className="w-4 h-4 mr-2" />
-                Add Stream
+                {t('streams.addStream')}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
               <DialogHeader>
-                <DialogTitle>Add New Stream</DialogTitle>
+                <DialogTitle>{t('streams.addNewStream')}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                    Stream URL
+                    {t('streams.streamUrl')}
                   </label>
                   <Input
                     placeholder="https://www.facebook.com/.../videos/..."
@@ -92,14 +105,14 @@ const StreamsPage = () => {
                   />
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Paste the URL of your Facebook, Instagram, or TikTok live stream video.
+                  {t('streams.urlHelp')}
                 </p>
                 <div className="flex justify-end gap-3 pt-4">
                   <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    Cancel
+                    {t('streams.cancel')}
                   </Button>
                   <Button onClick={handleAddStream} className="bg-emerald-500 hover:bg-emerald-600">
-                    Add Stream
+                    {t('streams.addStream')}
                   </Button>
                 </div>
               </div>
@@ -112,7 +125,7 @@ const StreamsPage = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
-              placeholder="Search streams..."
+              placeholder={t('streams.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 bg-white dark:bg-gray-800"
@@ -120,7 +133,7 @@ const StreamsPage = () => {
           </div>
           <Button variant="outline" className="flex items-center gap-2">
             <Filter className="w-4 h-4" />
-            Filters
+            {t('streams.filters')}
           </Button>
         </div>
 
@@ -133,7 +146,7 @@ const StreamsPage = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{streams.length}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Total Streams</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('streams.totalStreams')}</p>
               </div>
             </div>
           </div>
@@ -146,7 +159,7 @@ const StreamsPage = () => {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {streams.reduce((acc, s) => acc + s.commentsCount, 0).toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Comments</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('streams.comments')}</p>
               </div>
             </div>
           </div>
@@ -159,7 +172,7 @@ const StreamsPage = () => {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {streams.reduce((acc, s) => acc + s.ordersCount, 0)}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Orders</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('streams.orders')}</p>
               </div>
             </div>
           </div>
@@ -172,7 +185,7 @@ const StreamsPage = () => {
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {streams.reduce((acc, s) => acc + s.revenue, 0).toLocaleString()} zł
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Revenue</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('streams.revenue')}</p>
               </div>
             </div>
           </div>
@@ -188,11 +201,11 @@ const StreamsPage = () => {
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Play className="w-8 h-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No streams yet</h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">Add your first stream to get started</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('streams.noStreams')}</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">{t('streams.addFirst')}</p>
                 <Button onClick={() => setIsAddDialogOpen(true)} className="bg-emerald-500 hover:bg-emerald-600">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Stream
+                  {t('streams.addStream')}
                 </Button>
               </div>
             ) : (
@@ -238,11 +251,11 @@ const StreamsPage = () => {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>
                           <ExternalLink className="w-4 h-4 mr-2" />
-                          Open URL
+                          {t('streams.openUrl')}
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Download className="w-4 h-4 mr-2" />
-                          Export to Excel
+                          {t('streams.exportExcel')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-600"
@@ -252,7 +265,7 @@ const StreamsPage = () => {
                           }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
-                          Delete
+                          {t('streams.delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -268,19 +281,19 @@ const StreamsPage = () => {
           {/* Orders Panel */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Orders {selectedStream && `- ${selectedStream.title}`}
+              {t('streams.orders')} {selectedStream && `- ${selectedStream.title}`}
             </h2>
             {!selectedStream ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center border border-gray-100 dark:border-gray-700">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ShoppingCart className="w-8 h-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Select a stream</h3>
-                <p className="text-gray-500 dark:text-gray-400">Click on a stream to view its orders</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('streams.selectStream')}</h3>
+                <p className="text-gray-500 dark:text-gray-400">{t('streams.clickToView')}</p>
               </div>
             ) : streamOrders.length === 0 ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center border border-gray-100 dark:border-gray-700">
-                <p className="text-gray-500 dark:text-gray-400">No orders found for this stream</p>
+                <p className="text-gray-500 dark:text-gray-400">{t('streams.noOrders')}</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -291,17 +304,7 @@ const StreamsPage = () => {
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-medium text-gray-900 dark:text-white">{order.customerName}</h4>
-                      <Badge
-                        className={`text-xs ${
-                          order.status === 'confirmed'
-                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                            : order.status === 'shipped'
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                        }`}
-                      >
-                        {order.status}
-                      </Badge>
+                      {getOrderStatusBadge(order.status)}
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 italic">
                       "{order.comment}"

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
 
 const ContactPage = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,7 +23,6 @@ const ContactPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mock submission
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);
@@ -32,21 +33,21 @@ const ContactPage = () => {
   const contactInfo = [
     {
       icon: Mail,
-      title: 'Email',
-      value: 'hello@soclix.pl',
-      description: 'We reply within 24 hours',
+      titleKey: 'contact.email',
+      valueKey: 'contact.emailValue',
+      descKey: 'contact.emailDesc',
     },
     {
       icon: Phone,
-      title: 'Phone',
-      value: '+48 123 456 789',
-      description: 'Mon-Fri 9:00-17:00',
+      titleKey: 'contact.phone',
+      valueKey: 'contact.phoneValue',
+      descKey: 'contact.phoneDesc',
     },
     {
       icon: MapPin,
-      title: 'Office',
-      value: 'Warsaw, Poland',
-      description: 'Visit us at our HQ',
+      titleKey: 'contact.office',
+      valueKey: 'contact.officeValue',
+      descKey: 'contact.officeDesc',
     },
   ];
 
@@ -56,10 +57,10 @@ const ContactPage = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Get in Touch
+            {t('contact.title')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -79,13 +80,13 @@ const ContactPage = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                        {item.title}
+                        {t(item.titleKey)}
                       </h3>
                       <p className="text-emerald-600 dark:text-emerald-400 font-medium">
-                        {item.value}
+                        {t(item.valueKey)}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {item.description}
+                        {t(item.descKey)}
                       </p>
                     </div>
                   </div>
@@ -97,10 +98,10 @@ const ContactPage = () => {
             <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl p-6 text-white">
               <div className="flex items-center gap-3 mb-3">
                 <Clock className="w-5 h-5" />
-                <span className="font-semibold">Quick Response Time</span>
+                <span className="font-semibold">{t('contact.quickResponse')}</span>
               </div>
               <p className="text-emerald-100 text-sm">
-                Our team typically responds within 2-4 hours during business days.
+                {t('contact.quickResponseDesc')}
               </p>
             </div>
           </div>
@@ -114,10 +115,10 @@ const ContactPage = () => {
                     <CheckCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    Message Sent!
+                    {t('contact.messageSent')}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Thank you for contacting us. We'll get back to you soon.
+                    {t('contact.thankYou')}
                   </p>
                 </div>
               ) : (
@@ -125,7 +126,7 @@ const ContactPage = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">
-                        Your Name
+                        {t('contact.yourName')}
                       </Label>
                       <Input
                         id="name"
@@ -139,7 +140,7 @@ const ContactPage = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
-                        Email Address
+                        {t('contact.emailAddress')}
                       </Label>
                       <Input
                         id="email"
@@ -156,14 +157,14 @@ const ContactPage = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="subject" className="text-gray-700 dark:text-gray-300">
-                      Subject
+                      {t('contact.subject')}
                     </Label>
                     <Input
                       id="subject"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      placeholder="How can we help?"
+                      placeholder={t('contact.subjectPlaceholder')}
                       required
                       className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
                     />
@@ -171,14 +172,14 @@ const ContactPage = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="message" className="text-gray-700 dark:text-gray-300">
-                      Message
+                      {t('contact.message')}
                     </Label>
                     <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="Tell us more about your inquiry..."
+                      placeholder={t('contact.messagePlaceholder')}
                       required
                       rows={6}
                       className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 resize-none"
@@ -190,7 +191,7 @@ const ContactPage = () => {
                     className="w-full py-6 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all"
                   >
                     <Send className="w-4 h-4 mr-2" />
-                    Send Message
+                    {t('contact.sendMessage')}
                   </Button>
                 </form>
               )}
