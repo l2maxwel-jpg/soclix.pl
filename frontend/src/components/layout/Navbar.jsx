@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Mic2, Globe, Moon, Sun, Menu, X, ChevronDown } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Mic2, Moon, Sun, Menu, X, ChevronDown, User, LogIn } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const languages = [
@@ -18,6 +19,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const langMenuRef = useRef(null);
 
   const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
@@ -118,6 +120,25 @@ const Navbar = ({ darkMode, setDarkMode }) => {
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
 
+            {/* Auth Button */}
+            {user ? (
+              <Link to="/dashboard">
+                <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                  <div className="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <span className="max-w-[100px] truncate">{user.name}</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/login" className="hidden sm:block">
+                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  {t('auth.login')}
+                </Button>
+              </Link>
+            )}
+
             {/* Mobile menu button */}
             <Button
               variant="ghost"
@@ -147,6 +168,34 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                 {link.name}
               </Link>
             ))}
+
+            {/* Mobile Auth Button */}
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 px-4">
+              {user ? (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 py-3 text-gray-700 dark:text-gray-300"
+                >
+                  <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                    <User className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-sm text-gray-500">{t('dashboard.title')}</p>
+                  </div>
+                </Link>
+              ) : (
+                <div className="flex gap-3">
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1">
+                    <Button variant="outline" className="w-full">{t('auth.login')}</Button>
+                  </Link>
+                  <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="flex-1">
+                    <Button className="w-full bg-emerald-500 hover:bg-emerald-600">{t('auth.createAccount')}</Button>
+                  </Link>
+                </div>
+              )}
+            </div>
             
             {/* Mobile Language Selector */}
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
