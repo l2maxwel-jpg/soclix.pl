@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Mic2, Facebook, Instagram, Youtube } from 'lucide-react';
 
 const TikTokIcon = ({ className }) => (
@@ -9,6 +10,8 @@ const TikTokIcon = ({ className }) => (
 );
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -22,7 +25,7 @@ const Footer = () => {
               <span className="text-xl font-bold text-emerald-500">SOCLIX</span>
             </Link>
             <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md">
-              AI-powered platform for live stream sellers. Turn comments into sales instantly.
+              {t('footer.description')}
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a href="#" className="text-gray-400 hover:text-emerald-500 transition-colors">
@@ -42,47 +45,47 @@ const Footer = () => {
 
           {/* Links */}
           <div>
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Product</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">{t('footer.product')}</h4>
             <ul className="space-y-3">
               <li>
                 <Link to="/streams" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  My Streams
+                  {t('nav.myStreams')}
                 </Link>
               </li>
               <li>
                 <Link to="/pricing" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  Pricing
+                  {t('nav.pricing')}
                 </Link>
               </li>
               <li>
                 <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  API
+                  {t('footer.api')}
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Company</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">{t('footer.company')}</h4>
             <ul className="space-y-3">
               <li>
                 <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  About
+                  {t('footer.about')}
                 </a>
               </li>
               <li>
                 <Link to="/contact" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  Contact
+                  {t('nav.contact')}
                 </Link>
               </li>
               <li>
                 <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  Privacy Policy
+                  {t('footer.privacyPolicy')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 text-sm transition-colors">
-                  Terms of Service
+                  {t('footer.termsOfService')}
                 </a>
               </li>
             </ul>
@@ -91,7 +94,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-200 dark:border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            © 2025 Soclix. All rights reserved.
+            {t('footer.copyright')}
           </p>
         </div>
       </div>
