@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Search, Download, RefreshCw, Eye, EyeOff, ChevronDown, ChevronUp,
-  User, ExternalLink, Check, Square, CheckSquare, Filter, MoreHorizontal,
+  Search, Download, RefreshCw, Eye, EyeOff, X,
+  User, ExternalLink, Filter, ChevronDown, ChevronUp,
   Package, Palette, Ruler, Tag, Warehouse, Hash, Calendar, MessageSquare
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -10,7 +10,7 @@ import { Input } from '../components/ui/input';
 import { Checkbox } from '../components/ui/checkbox';
 import { Badge } from '../components/ui/badge';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { mockProfiles, mockStreamOrders, streamStats } from '../data/streamOrdersData';
+import { mockProfiles, mockStreamOrders } from '../data/streamOrdersData';
 
 const StreamsPage = () => {
   const { t } = useTranslation();
@@ -20,29 +20,90 @@ const StreamsPage = () => {
   const [expandedComments, setExpandedComments] = useState(new Set());
   const [showHidden, setShowHidden] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
-  // Filter orders based on search and profile selection
+  // Filter states
+  const [filters, setFilters] = useState({
+    code: '',
+    color: '',
+    size: '',
+    quantityMin: '',
+    quantityMax: '',
+  });
+
+  // Update filter value
+  const updateFilter = (field, value) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      code: '',
+      color: '',
+      size: '',
+      quantityMin: '',
+      quantityMax: '',
+    });
+  };
+
+  // Check if any filter is active
+  const hasActiveFilters = useMemo(() => {
+    return Object.values(filters).some(v => v !== '');
+  }, [filters]);
+
+  // Filter orders based on all criteria
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
+      // Search filter
       const matchesSearch = !searchQuery || 
         order.profileName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.profileId.includes(searchQuery);
       
+      // Profile filter
       const matchesProfile = !selectedProfile || order.profileId === selectedProfile;
+      
+      // Visibility filter
       const matchesVisibility = showHidden || order.status !== 'hidden';
       
-      return matchesSearch && matchesProfile && matchesVisibility;
+      // Code filter
+      const matchesCode = !filters.code || 
+        order.code.toLowerCase().includes(filters.code.toLowerCase());
+      
+      // Color filter
+      const matchesColor = !filters.color || 
+        order.color.toLowerCase().includes(filters.color.toLowerCase());
+      
+      // Size filter
+      const matchesSize = !filters.size || 
+        order.size.toLowerCase().includes(filters.size.toLowerCase());
+      
+      // Quantity filter
+      const minQty = filters.quantityMin ? parseInt(filters.quantityMin) : 0;
+      const maxQty = filters.quantityMax ? parseInt(filters.quantityMax) : Infinity;
+      const matchesQuantity = order.quantity >= minQty && order.quantity <= maxQty;
+      
+      return matchesSearch && matchesProfile && matchesVisibility && 
+             matchesCode && matchesColor && matchesSize && matchesQuantity;
     });
-  }, [orders, searchQuery, selectedProfile, showHidden]);
+  }, [orders, searchQuery, selectedProfile, showHidden, filters]);
 
-  // Stats
+  // Stats with filter counts
   const stats = useMemo(() => {
-    const total = filteredOrders.length;
+    const total = orders.length;
+    const filtered = filteredOrders.length;
     const hidden = orders.filter(o => o.status === 'hidden').length;
     const active = orders.filter(o => o.status === 'active').length;
     const selected = orders.filter(o => o.isSelected).length;
-    return { total, hidden, active, selected };
+    
+    // Count unique values for filtered results
+    const uniqueCodes = new Set(filteredOrders.filter(o => o.code).map(o => o.code)).size;
+    const uniqueColors = new Set(filteredOrders.filter(o => o.color).map(o => o.color)).size;
+    const uniqueSizes = new Set(filteredOrders.filter(o => o.size).map(o => o.size)).size;
+    const totalQuantity = filteredOrders.reduce((sum, o) => sum + o.quantity, 0);
+    
+    return { total, filtered, hidden, active, selected, uniqueCodes, uniqueColors, uniqueSizes, totalQuantity };
   }, [filteredOrders, orders]);
 
   // Toggle comment expansion
@@ -65,11 +126,15 @@ const StreamsPage = () => {
     ));
   };
 
-  // Select/deselect all
+  // Select/deselect all visible
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
-    setOrders(prev => prev.map(order => ({ ...order, isSelected: newSelectAll })));
+    const filteredIds = new Set(filteredOrders.map(o => o.id));
+    setOrders(prev => prev.map(order => ({
+      ...order,
+      isSelected: filteredIds.has(order.id) ? newSelectAll : order.isSelected
+    })));
   };
 
   // Update order field
@@ -84,7 +149,6 @@ const StreamsPage = () => {
     const selectedOrders = orders.filter(o => o.isSelected);
     const dataToExport = selectedOrders.length > 0 ? selectedOrders : filteredOrders;
     
-    // Create CSV content
     const headers = ['ID', 'Profile', 'Comment', 'Code', 'Color', 'Size', 'Class', 'Date', 'Qty'];
     const rows = dataToExport.map(o => [
       o.profileId,
@@ -150,6 +214,23 @@ const StreamsPage = () => {
     );
   };
 
+  // Filter input component
+  const FilterInput = ({ icon: Icon, label, value, onChange, placeholder, type = "text" }) => (
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
+        <Icon className="w-3 h-3" />
+        {label}
+      </label>
+      <Input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-9 text-sm"
+      />
+    </div>
+  );
+
   return (
     <div className="min-h-screen pt-16 bg-gray-50 dark:bg-gray-900">
       <div className="flex h-[calc(100vh-64px)]">
@@ -157,12 +238,12 @@ const StreamsPage = () => {
         <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="font-semibold text-gray-900 dark:text-white mb-3">
-              {t('streams.profiles')}
+              {t('streams.profiles') || 'Профили'}
             </h2>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
-                placeholder={t('streams.searchProfile')}
+                placeholder={t('streams.searchProfile') || 'Поиск профиля...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 h-9 text-sm bg-gray-50 dark:bg-gray-900"
@@ -185,8 +266,8 @@ const StreamsPage = () => {
                   <User className="w-4 h-4" />
                 </div>
                 <div className="text-left flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{t('streams.allProfiles')}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{orders.length} {t('streams.orders')}</p>
+                  <p className="text-sm font-medium truncate">{t('streams.allProfiles') || 'Все профили'}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{orders.length} {t('streams.orders') || 'заказов'}</p>
                 </div>
               </button>
 
@@ -228,11 +309,11 @@ const StreamsPage = () => {
                   className="bg-emerald-500 hover:bg-emerald-600 text-white"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  {t('streams.process')}
+                  {t('streams.process') || 'Обработать'}
                 </Button>
                 <Button variant="outline" onClick={handleExport}>
                   <Download className="w-4 h-4 mr-2" />
-                  {t('streams.export')}
+                  {t('streams.export') || 'Экспорт'}
                 </Button>
               </div>
               
@@ -242,15 +323,113 @@ const StreamsPage = () => {
                     checked={showHidden}
                     onCheckedChange={setShowHidden}
                   />
-                  {t('streams.showHidden')}
+                  {t('streams.showHidden') || 'Показать скрытые'}
                 </label>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant={showFilters ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={showFilters ? "bg-emerald-500 hover:bg-emerald-600" : ""}
+                >
                   <Filter className="w-4 h-4 mr-2" />
-                  {t('streams.filters')}
+                  {t('streams.filters') || 'Фильтры'}
+                  {hasActiveFilters && (
+                    <Badge className="ml-2 bg-white text-emerald-600 h-5 w-5 p-0 flex items-center justify-center">
+                      !
+                    </Badge>
+                  )}
                 </Button>
               </div>
             </div>
           </div>
+
+          {/* Filters Panel */}
+          {showFilters && (
+            <div className="bg-emerald-50 dark:bg-emerald-900/10 border-b border-emerald-200 dark:border-emerald-800 p-4">
+              <div className="flex items-end gap-4 flex-wrap">
+                <FilterInput
+                  icon={Tag}
+                  label={t('streams.code') || 'Код'}
+                  value={filters.code}
+                  onChange={(v) => updateFilter('code', v)}
+                  placeholder="SPD-001..."
+                />
+                <FilterInput
+                  icon={Palette}
+                  label={t('streams.color') || 'Цвет'}
+                  value={filters.color}
+                  onChange={(v) => updateFilter('color', v)}
+                  placeholder="Черный, Белый..."
+                />
+                <FilterInput
+                  icon={Ruler}
+                  label={t('streams.size') || 'Размер'}
+                  value={filters.size}
+                  onChange={(v) => updateFilter('size', v)}
+                  placeholder="S, M, L, 38..."
+                />
+                <div className="flex gap-2">
+                  <FilterInput
+                    icon={Package}
+                    label={t('streams.qtyMin') || 'Кол-во от'}
+                    value={filters.quantityMin}
+                    onChange={(v) => updateFilter('quantityMin', v)}
+                    placeholder="1"
+                    type="number"
+                  />
+                  <FilterInput
+                    icon={Package}
+                    label={t('streams.qtyMax') || 'Кол-во до'}
+                    value={filters.quantityMax}
+                    onChange={(v) => updateFilter('quantityMax', v)}
+                    placeholder="10"
+                    type="number"
+                  />
+                </div>
+                
+                {hasActiveFilters && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearFilters}
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    {t('streams.clearFilters') || 'Сбросить'}
+                  </Button>
+                )}
+              </div>
+              
+              {/* Filter Results Summary */}
+              <div className="mt-4 flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-6 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    <span className="font-semibold text-emerald-600">{stats.filtered}</span> из {stats.total} записей
+                  </span>
+                  <span className="text-gray-400">|</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    <Tag className="w-3 h-3 inline mr-1" />
+                    <span className="font-semibold">{stats.uniqueCodes}</span> кодов
+                  </span>
+                  <span className="text-gray-400">|</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    <Palette className="w-3 h-3 inline mr-1" />
+                    <span className="font-semibold">{stats.uniqueColors}</span> цветов
+                  </span>
+                  <span className="text-gray-400">|</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    <Ruler className="w-3 h-3 inline mr-1" />
+                    <span className="font-semibold">{stats.uniqueSizes}</span> размеров
+                  </span>
+                  <span className="text-gray-400">|</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    <Package className="w-3 h-3 inline mr-1" />
+                    <span className="font-semibold">{stats.totalQuantity}</span> шт. всего
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Table */}
           <div className="flex-1 overflow-auto">
@@ -267,164 +446,131 @@ const StreamsPage = () => {
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     <div className="flex items-center gap-1">
                       <Hash className="w-3 h-3" />
-                      {t('streams.profileId')}
+                      {t('streams.profileId') || 'ID Профиля'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     <div className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      {t('streams.profile')}
+                      {t('streams.profile') || 'Профиль'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider min-w-[200px]">
                     <div className="flex items-center gap-1">
                       <MessageSquare className="w-3 h-3" />
-                      {t('streams.comment')}
+                      {t('streams.comment') || 'Комментарий'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">
                     <div className="flex items-center gap-1">
                       <Tag className="w-3 h-3" />
-                      {t('streams.code')}
+                      {t('streams.code') || 'Код'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">
                     <div className="flex items-center gap-1">
                       <Palette className="w-3 h-3" />
-                      {t('streams.color')}
+                      {t('streams.color') || 'Цвет'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-20">
                     <div className="flex items-center gap-1">
                       <Ruler className="w-3 h-3" />
-                      {t('streams.size')}
+                      {t('streams.size') || 'Размер'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">
                     <div className="flex items-center gap-1">
                       <Package className="w-3 h-3" />
-                      {t('streams.class')}
+                      {t('streams.class') || 'Класс'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-40">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
-                      {t('streams.date')}
+                      {t('streams.date') || 'Дата'}
                     </div>
                   </th>
                   <th className="px-3 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-16">
-                    {t('streams.qty')}
+                    {t('streams.qty') || 'Кол-во'}
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
-                {filteredOrders.map((order) => (
-                  <React.Fragment key={order.id}>
-                    <tr
-                      className={`transition-colors ${
-                        order.isSelected
-                          ? 'bg-emerald-50 dark:bg-emerald-900/20'
-                          : order.status === 'hidden'
-                          ? 'bg-gray-50 dark:bg-gray-900/50 opacity-60'
-                          : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
-                      }`}
-                    >
-                      <td className="px-3 py-2">
-                        <Checkbox
-                          checked={order.isSelected || false}
-                          onCheckedChange={() => toggleOrderSelection(order.id)}
-                        />
-                      </td>
-                      <td className="px-2 py-2">
-                        <button
-                          onClick={() => toggleComment(order.id)}
-                          className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                          title={expandedComments.has(order.id) ? t('streams.hideComment') : t('streams.showComment')}
-                        >
-                          {expandedComments.has(order.id) ? (
-                            <EyeOff className="w-4 h-4 text-gray-500" />
-                          ) : (
-                            <Eye className="w-4 h-4 text-gray-500" />
-                          )}
-                        </button>
-                      </td>
-                      <td className="px-3 py-2">
-                        <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                          {order.profileId}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-medium">
-                            {order.profileName.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                          </div>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            {order.profileName}
+                {filteredOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={11} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center">
+                        <Filter className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-4" />
+                        <p className="text-gray-500 dark:text-gray-400 font-medium">
+                          {t('streams.noResults') || 'Нет результатов'}
+                        </p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+                          {t('streams.tryDifferentFilters') || 'Попробуйте изменить параметры фильтрации'}
+                        </p>
+                        {hasActiveFilters && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={clearFilters}
+                            className="mt-4"
+                          >
+                            <X className="w-4 h-4 mr-1" />
+                            {t('streams.clearFilters') || 'Сбросить фильтры'}
+                          </Button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredOrders.map((order) => (
+                    <React.Fragment key={order.id}>
+                      <tr
+                        className={`transition-colors ${
+                          order.isSelected
+                            ? 'bg-emerald-50 dark:bg-emerald-900/20'
+                            : order.status === 'hidden'
+                            ? 'bg-gray-50 dark:bg-gray-900/50 opacity-60'
+                            : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                        }`}
+                      >
+                        <td className="px-3 py-2">
+                          <Checkbox
+                            checked={order.isSelected || false}
+                            onCheckedChange={() => toggleOrderSelection(order.id)}
+                          />
+                        </td>
+                        <td className="px-2 py-2">
+                          <button
+                            onClick={() => toggleComment(order.id)}
+                            className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                            title={expandedComments.has(order.id) ? 'Скрыть комментарий' : 'Показать комментарий'}
+                          >
+                            {expandedComments.has(order.id) ? (
+                              <EyeOff className="w-4 h-4 text-gray-500" />
+                            ) : (
+                              <Eye className="w-4 h-4 text-gray-500" />
+                            )}
+                          </button>
+                        </td>
+                        <td className="px-3 py-2">
+                          <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
+                            {order.profileId}
                           </span>
-                        </div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[250px]">
-                            {order.comment}
-                          </p>
-                          {order.commentUrl && (
-                            <a
-                              href={order.commentUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-emerald-500 hover:text-emerald-600 shrink-0"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <EditableCell
-                          value={order.code}
-                          onChange={(val) => updateOrderField(order.id, 'code', val)}
-                          placeholder={t('streams.enter')}
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <EditableCell
-                          value={order.color}
-                          onChange={(val) => updateOrderField(order.id, 'color', val)}
-                          placeholder={t('streams.enter')}
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <EditableCell
-                          value={order.size}
-                          onChange={(val) => updateOrderField(order.id, 'size', val)}
-                          placeholder={t('streams.enter')}
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <EditableCell
-                          value={order.classField}
-                          onChange={(val) => updateOrderField(order.id, 'classField', val)}
-                          placeholder={t('streams.enter')}
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {order.warehouse}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2 text-center">
-                        <Badge variant="secondary" className="font-mono">
-                          {order.quantity}
-                        </Badge>
-                      </td>
-                    </tr>
-                    {/* Expanded comment row */}
-                    {expandedComments.has(order.id) && (
-                      <tr className="bg-emerald-50/50 dark:bg-emerald-900/10">
-                        <td colSpan={11} className="px-6 py-4">
-                          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-emerald-200 dark:border-emerald-800">
-                            <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-medium">
+                              {order.profileName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                            </div>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                              {order.profileName}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[250px]">
                               {order.comment}
                             </p>
                             {order.commentUrl && (
@@ -432,18 +578,78 @@ const StreamsPage = () => {
                                 href={order.commentUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 mt-2 text-xs text-emerald-500 hover:text-emerald-600"
+                                className="text-emerald-500 hover:text-emerald-600 shrink-0"
                               >
-                                <ExternalLink className="w-3 h-3" />
-                                {order.commentUrl}
+                                <ExternalLink className="w-3.5 h-3.5" />
                               </a>
                             )}
                           </div>
                         </td>
+                        <td className="px-3 py-2">
+                          <EditableCell
+                            value={order.code}
+                            onChange={(val) => updateOrderField(order.id, 'code', val)}
+                            placeholder="Введите..."
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <EditableCell
+                            value={order.color}
+                            onChange={(val) => updateOrderField(order.id, 'color', val)}
+                            placeholder="Введите..."
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <EditableCell
+                            value={order.size}
+                            onChange={(val) => updateOrderField(order.id, 'size', val)}
+                            placeholder="Введите..."
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <EditableCell
+                            value={order.classField}
+                            onChange={(val) => updateOrderField(order.id, 'classField', val)}
+                            placeholder="Введите..."
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {order.warehouse}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          <Badge variant="secondary" className="font-mono">
+                            {order.quantity}
+                          </Badge>
+                        </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                ))}
+                      {/* Expanded comment row */}
+                      {expandedComments.has(order.id) && (
+                        <tr className="bg-emerald-50/50 dark:bg-emerald-900/10">
+                          <td colSpan={11} className="px-6 py-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-emerald-200 dark:border-emerald-800">
+                              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                {order.comment}
+                              </p>
+                              {order.commentUrl && (
+                                <a
+                                  href={order.commentUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 mt-2 text-xs text-emerald-500 hover:text-emerald-600"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  {order.commentUrl}
+                                </a>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -453,19 +659,25 @@ const StreamsPage = () => {
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-6">
                 <span className="text-gray-600 dark:text-gray-400">
-                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.total')}:</span> {stats.total}
+                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.total') || 'Всего'}:</span> {stats.filtered}
+                  {stats.filtered !== stats.total && (
+                    <span className="text-gray-400 ml-1">(из {stats.total})</span>
+                  )}
                 </span>
                 <span className="text-gray-600 dark:text-gray-400">
-                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.hiddenCount')}:</span> {stats.hidden}
+                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.hiddenCount') || 'Скрытых'}:</span> {stats.hidden}
                 </span>
                 <span className="text-gray-600 dark:text-gray-400">
-                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.activeCount')}:</span> {stats.active}
+                  <span className="font-semibold text-gray-900 dark:text-white">{t('streams.activeCount') || 'Активных'}:</span> {stats.active}
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  <span className="font-semibold text-emerald-600">{t('streams.totalQty') || 'Товаров'}:</span> {stats.totalQuantity} шт.
                 </span>
               </div>
               <div className="flex items-center gap-4">
                 {stats.selected > 0 && (
                   <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    {t('streams.selected')}: {stats.selected}
+                    {t('streams.selected') || 'Выбрано'}: {stats.selected}
                   </Badge>
                 )}
               </div>
