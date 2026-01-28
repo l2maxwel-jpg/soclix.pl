@@ -235,5 +235,32 @@
     "accountId": "Account ID",
     "memberSince": "Member Since",
     "activeDevices": "Active Devices"
+  },
+  "modal": {
+    "title": "Scan Configuration",
+    "description": "Enter known product codes, colors and sizes for more accurate order recognition",
+    "streamUrl": "Stream URL",
+    "aiHelperTitle": "Help AI better recognize orders",
+    "aiHelperDesc": "Specify all product codes, colors and sizes used in your store. This will help the system more accurately identify orders from comments.",
+    "codes": "Product Codes",
+    "codesPlaceholder": "Enter codes separated by commas...",
+    "colors": "Colors",
+    "colorsPlaceholder": "Enter colors separated by commas...",
+    "colorsExample": "Black, White, Red, Blue, Beige",
+    "sizes": "Sizes",
+    "sizesPlaceholder": "Enter sizes separated by commas...",
+    "keywords": "Keywords (optional)",
+    "keywordsPlaceholder": "Additional words for recognition...",
+    "keywordsExample": "take, want, order, reserve, +1",
+    "example": "Example",
+    "clearAll": "Clear all",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "startScan": "Start scanning",
+    "success": "Stream processed successfully!",
+    "successDesc": "Orders loaded to the table",
+    "error": "Processing error",
+    "errorDesc": "Please try again",
+    "retry": "Retry"
   }
 }
