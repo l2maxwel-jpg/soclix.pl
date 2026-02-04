@@ -41,12 +41,123 @@ const ScanConfigModal = ({
     digits: '3',
   });
   const [showCodeGenerator, setShowCodeGenerator] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showSizePicker, setShowSizePicker] = useState(false);
+  const [selectedColors, setSelectedColors] = useState(new Set());
+  const [selectedSizes, setSelectedSizes] = useState(new Set());
+
+  // Predefined colors with their display colors
+  const predefinedColors = [
+    { name: 'Черный', nameEn: 'Black', color: '#000000' },
+    { name: 'Белый', nameEn: 'White', color: '#FFFFFF' },
+    { name: 'Серый', nameEn: 'Gray', color: '#808080' },
+    { name: 'Красный', nameEn: 'Red', color: '#EF4444' },
+    { name: 'Синий', nameEn: 'Blue', color: '#3B82F6' },
+    { name: 'Зеленый', nameEn: 'Green', color: '#22C55E' },
+    { name: 'Желтый', nameEn: 'Yellow', color: '#EAB308' },
+    { name: 'Оранжевый', nameEn: 'Orange', color: '#F97316' },
+    { name: 'Розовый', nameEn: 'Pink', color: '#EC4899' },
+    { name: 'Фиолетовый', nameEn: 'Purple', color: '#A855F7' },
+    { name: 'Бежевый', nameEn: 'Beige', color: '#D4A574' },
+    { name: 'Коричневый', nameEn: 'Brown', color: '#92400E' },
+    { name: 'Бордовый', nameEn: 'Burgundy', color: '#7F1D1D' },
+    { name: 'Голубой', nameEn: 'Light Blue', color: '#60A5FA' },
+    { name: 'Темно-синий', nameEn: 'Navy', color: '#1E3A5F' },
+    { name: 'Хаки', nameEn: 'Khaki', color: '#8B8B4B' },
+    { name: 'Золотой', nameEn: 'Gold', color: '#FFD700' },
+    { name: 'Серебряный', nameEn: 'Silver', color: '#C0C0C0' },
+    { name: 'Мятный', nameEn: 'Mint', color: '#98FB98' },
+    { name: 'Коралловый', nameEn: 'Coral', color: '#FF7F50' },
+  ];
+
+  // Predefined sizes by category
+  const sizeCategories = [
+    { 
+      name: 'letterSizes', 
+      label: 'XS-XXL',
+      sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'] 
+    },
+    { 
+      name: 'euSizes', 
+      label: 'EU (32-54)',
+      sizes: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', '52', '54'] 
+    },
+    { 
+      name: 'usSizes', 
+      label: 'US (0-16)',
+      sizes: ['0', '2', '4', '6', '8', '10', '12', '14', '16'] 
+    },
+    { 
+      name: 'shoeSizes', 
+      label: 'Обувь (35-46)',
+      sizes: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'] 
+    },
+  ];
 
   // Extended mode - Product catalog as array of objects
   const [productRows, setProductRows] = useState([
     { id: 1, code: '', colors: '', sizes: '' }
   ]);
   const [extendedKeywords, setExtendedKeywords] = useState('');
+
+  // Toggle color selection
+  const toggleColor = (colorName) => {
+    const newSelected = new Set(selectedColors);
+    if (newSelected.has(colorName)) {
+      newSelected.delete(colorName);
+    } else {
+      newSelected.add(colorName);
+    }
+    setSelectedColors(newSelected);
+  };
+
+  // Toggle size selection
+  const toggleSize = (size) => {
+    const newSelected = new Set(selectedSizes);
+    if (newSelected.has(size)) {
+      newSelected.delete(size);
+    } else {
+      newSelected.add(size);
+    }
+    setSelectedSizes(newSelected);
+  };
+
+  // Select all sizes in category
+  const selectAllSizesInCategory = (sizes) => {
+    const newSelected = new Set(selectedSizes);
+    sizes.forEach(size => newSelected.add(size));
+    setSelectedSizes(newSelected);
+  };
+
+  // Add selected colors to field
+  const addSelectedColors = () => {
+    if (selectedColors.size === 0) return;
+    
+    const colorsArray = Array.from(selectedColors);
+    const existingColors = simpleCatalog.colors.trim();
+    const newColors = existingColors 
+      ? `${existingColors}, ${colorsArray.join(', ')}`
+      : colorsArray.join(', ');
+    
+    setSimpleCatalog(prev => ({ ...prev, colors: newColors }));
+    setShowColorPicker(false);
+    setSelectedColors(new Set());
+  };
+
+  // Add selected sizes to field
+  const addSelectedSizes = () => {
+    if (selectedSizes.size === 0) return;
+    
+    const sizesArray = Array.from(selectedSizes);
+    const existingSizes = simpleCatalog.sizes.trim();
+    const newSizes = existingSizes 
+      ? `${existingSizes}, ${sizesArray.join(', ')}`
+      : sizesArray.join(', ');
+    
+    setSimpleCatalog(prev => ({ ...prev, sizes: newSizes }));
+    setShowSizePicker(false);
+    setSelectedSizes(new Set());
+  };
 
   // Generate codes from range
   const generateCodes = () => {
