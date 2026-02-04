@@ -272,6 +272,14 @@
     "retry": "Повторить",
     "extendedSettings": "Расширенные настройки",
     "extendedMode": "Расширенный режим",
-    "simpleMode": "Простой режим"
+    "simpleMode": "Простой режим",
+    "generateCodes": "Генератор",
+    "codeGeneratorTitle": "Генерация кодов по диапазону",
+    "prefix": "Префикс",
+    "from": "От",
+    "to": "До",
+    "digits": "Цифр",
+    "addCodes": "Добавить",
+    "generatorExample": "Результат"
   }
 }
