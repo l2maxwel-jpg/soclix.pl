@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Sparkles, Link2, Tag, Palette, Ruler, Package, 
-  CheckCircle, AlertCircle, Loader2, X, Plus, Trash2, Settings2 
+  CheckCircle, AlertCircle, Loader2, X, Plus, Trash2, Settings2, Hash, Wand2 
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -33,11 +33,51 @@ const ScanConfigModal = ({
     keywords: '',
   });
 
+  // Code generator state
+  const [codeGenerator, setCodeGenerator] = useState({
+    prefix: '',
+    from: '',
+    to: '',
+    digits: '3',
+  });
+  const [showCodeGenerator, setShowCodeGenerator] = useState(false);
+
   // Extended mode - Product catalog as array of objects
   const [productRows, setProductRows] = useState([
     { id: 1, code: '', colors: '', sizes: '' }
   ]);
   const [extendedKeywords, setExtendedKeywords] = useState('');
+
+  // Generate codes from range
+  const generateCodes = () => {
+    const { prefix, from, to, digits } = codeGenerator;
+    const start = parseInt(from, 10);
+    const end = parseInt(to, 10);
+    const digitCount = parseInt(digits, 10);
+
+    if (isNaN(start) || isNaN(end) || start > end) {
+      return;
+    }
+
+    // Limit to prevent browser freeze (max 1000 codes)
+    const maxCodes = Math.min(end - start + 1, 1000);
+    const codes = [];
+    
+    for (let i = start; i < start + maxCodes; i++) {
+      const paddedNum = String(i).padStart(digitCount, '0');
+      codes.push(`${prefix}${paddedNum}`);
+    }
+
+    // Add to existing codes
+    const existingCodes = simpleCatalog.codes.trim();
+    const newCodes = existingCodes 
+      ? `${existingCodes}, ${codes.join(', ')}`
+      : codes.join(', ');
+    
+    setSimpleCatalog(prev => ({ ...prev, codes: newCodes }));
+    setShowCodeGenerator(false);
+    setCodeGenerator({ prefix: '', from: '', to: '', digits: '3' });
+  };
 
   // Add new row (extended mode)
   const addRow = () => {
