@@ -280,6 +280,13 @@
     "to": "До",
     "digits": "Цифр",
     "addCodes": "Добавить",
-    "generatorExample": "Результат"
+    "generatorExample": "Результат",
+    "selectColors": "Выбрать",
+    "popularColors": "Популярные цвета",
+    "selected": "Выбрано",
+    "addSelected": "Добавить",
+    "selectSizes": "Выбрать",
+    "standardSizes": "Стандартные размеры",
+    "selectAll": "Выбрать все"
   }
 }
