@@ -269,6 +269,9 @@
     "successDesc": "Orders loaded to the table",
     "error": "Processing error",
     "errorDesc": "Please try again",
-    "retry": "Retry"
+    "retry": "Retry",
+    "extendedSettings": "Extended settings",
+    "extendedMode": "Extended mode",
+    "simpleMode": "Simple mode"
   }
 }
