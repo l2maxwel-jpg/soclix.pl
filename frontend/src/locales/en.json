@@ -272,6 +272,14 @@
     "retry": "Retry",
     "extendedSettings": "Extended settings",
     "extendedMode": "Extended mode",
-    "simpleMode": "Simple mode"
+    "simpleMode": "Simple mode",
+    "generateCodes": "Generator",
+    "codeGeneratorTitle": "Generate codes by range",
+    "prefix": "Prefix",
+    "from": "From",
+    "to": "To",
+    "digits": "Digits",
+    "addCodes": "Add",
+    "generatorExample": "Result"
   }
 }
