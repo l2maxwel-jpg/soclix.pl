@@ -222,164 +222,18 @@ const StreamsPage = () => {
     </div>
   );
 
-  // Catalog input component
-  const CatalogInput = ({ icon: Icon, label, value, onChange, placeholder, example }) => (
-    <div className="space-y-2">
-      <Label className="flex items-center gap-2 text-sm font-medium">
-        <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-          <Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-        </div>
-        {label}
-      </Label>
-      <Textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="min-h-[80px] text-sm resize-none"
-      />
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        Пример: {example}
-      </p>
-    </div>
-  );
-
   return (
     <div className="min-h-screen pt-16 bg-gray-50 dark:bg-gray-900">
       {/* Stream Configuration Modal */}
-      <Dialog open={showConfigModal} onOpenChange={setShowConfigModal}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <Sparkles className="w-6 h-6 text-emerald-500" />
-              Настройка сканирования
-            </DialogTitle>
-            <DialogDescription>
-              Введите известные коды, цвета и размеры товаров для более точного распознавания заказов
-            </DialogDescription>
-          </DialogHeader>
-
-          {processStatus === 'success' ? (
-            <div className="flex flex-col items-center py-8">
-              <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-8 h-8 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Стрим успешно обработан!</h3>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">Заказы загружены в таблицу</p>
-            </div>
-          ) : processStatus === 'error' ? (
-            <div className="flex flex-col items-center py-8">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
-                <AlertCircle className="w-8 h-8 text-red-500" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ошибка обработки</h3>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">Попробуйте ещё раз</p>
-              <Button onClick={() => setProcessStatus(null)} className="mt-4">Повторить</Button>
-            </div>
-          ) : (
-            <div className="space-y-6 py-4">
-              {/* Stream URL Display */}
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <Link2 className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">URL стрима:</span>
-                </div>
-                <p className="text-sm text-emerald-600 dark:text-emerald-400 break-all">{streamUrl}</p>
-              </div>
-
-              {/* AI Helper Info */}
-              <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
-                <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-emerald-800 dark:text-emerald-300">
-                      Помогите ИИ лучше распознать заказы
-                    </h4>
-                    <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-1">
-                      Укажите все коды товаров, цвета и размеры, которые используются в вашем магазине. 
-                      Это поможет системе точнее определить заказы из комментариев.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Catalog Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <CatalogInput
-                  icon={Tag}
-                  label="Коды товаров"
-                  value={catalog.codes}
-                  onChange={(v) => setCatalog(prev => ({ ...prev, codes: v }))}
-                  placeholder="Введите коды через запятую..."
-                  example="SPD-001, SWT-042, BIZ-088, TOR-155"
-                />
-
-                <CatalogInput
-                  icon={Palette}
-                  label="Цвета"
-                  value={catalog.colors}
-                  onChange={(v) => setCatalog(prev => ({ ...prev, colors: v }))}
-                  placeholder="Введите цвета через запятую..."
-                  example="Черный, Белый, Красный, Синий, Бежевый"
-                />
-
-                <CatalogInput
-                  icon={Ruler}
-                  label="Размеры"
-                  value={catalog.sizes}
-                  onChange={(v) => setCatalog(prev => ({ ...prev, sizes: v }))}
-                  placeholder="Введите размеры через запятую..."
-                  example="XS, S, M, L, XL, 36, 38, 40, 42"
-                />
-
-                <CatalogInput
-                  icon={Package}
-                  label="Ключевые слова (опционально)"
-                  value={catalog.keywords}
-                  onChange={(v) => setCatalog(prev => ({ ...prev, keywords: v }))}
-                  placeholder="Дополнительные слова для распознавания..."
-                  example="беру, хочу, заказ, бронь, +1"
-                />
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setCatalog({ codes: '', colors: '', sizes: '', keywords: '' });
-                  }}
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Очистить всё
-                </Button>
-
-                <div className="flex items-center gap-3">
-                  <Button variant="outline" onClick={() => setShowConfigModal(false)}>
-                    Отмена
-                  </Button>
-                  <Button
-                    onClick={handleProcessStream}
-                    disabled={isProcessing}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white min-w-[160px]"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Обработка...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        Начать сканирование
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ScanConfigModal
+        open={showConfigModal}
+        onOpenChange={setShowConfigModal}
+        streamUrl={streamUrl}
+        onProcess={handleProcessStream}
+        isProcessing={isProcessing}
+        processStatus={processStatus}
+        setProcessStatus={setProcessStatus}
+      />
 
       <div className="flex h-[calc(100vh-64px)]">
         {/* Left Sidebar - Profiles */}
