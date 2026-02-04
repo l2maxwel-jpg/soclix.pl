@@ -187,14 +187,106 @@ const ScanConfigModal = ({
 
       {/* Catalog Inputs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CatalogInput
-          icon={Tag}
-          label={t('modal.codes')}
-          value={simpleCatalog.codes}
-          onChange={(v) => setSimpleCatalog(prev => ({ ...prev, codes: v }))}
-          placeholder={t('modal.codesPlaceholder')}
-          example="SPD-001, SWT-042, BIZ-088, TOR-155"
-        />
+        {/* Product Codes with Generator */}
+        <div className="space-y-2">
+          <Label className="flex items-center justify-between">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                <Tag className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              {t('modal.codes')}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowCodeGenerator(!showCodeGenerator)}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 h-7 px-2"
+            >
+              <Wand2 className="w-3.5 h-3.5 mr-1" />
+              {t('modal.generateCodes')}
+            </Button>
+          </Label>
+          
+          {/* Code Generator Panel */}
+          {showCodeGenerator && (
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium text-blue-800 dark:text-blue-300">
+                <Wand2 className="w-4 h-4" />
+                {t('modal.codeGeneratorTitle')}
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                <div className="col-span-2">
+                  <Label className="text-xs text-blue-700 dark:text-blue-400">{t('modal.prefix')}</Label>
+                  <Input
+                    value={codeGenerator.prefix}
+                    onChange={(e) => setCodeGenerator(prev => ({ ...prev, prefix: e.target.value }))}
+                    placeholder="SPD-"
+                    className="h-8 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-blue-700 dark:text-blue-400">{t('modal.from')}</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={codeGenerator.from}
+                    onChange={(e) => setCodeGenerator(prev => ({ ...prev, from: e.target.value }))}
+                    placeholder="1"
+                    className="h-8 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-blue-700 dark:text-blue-400">{t('modal.to')}</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={codeGenerator.to}
+                    onChange={(e) => setCodeGenerator(prev => ({ ...prev, to: e.target.value }))}
+                    placeholder="100"
+                    className="h-8 text-sm mt-1"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Label className="text-xs text-blue-700 dark:text-blue-400">{t('modal.digits')}</Label>
+                  <select
+                    value={codeGenerator.digits}
+                    onChange={(e) => setCodeGenerator(prev => ({ ...prev, digits: e.target.value }))}
+                    className="h-7 text-xs rounded border border-blue-300 dark:border-blue-700 bg-white dark:bg-gray-900 px-2"
+                  >
+                    <option value="1">1 (1, 2, 3)</option>
+                    <option value="2">2 (01, 02, 03)</option>
+                    <option value="3">3 (001, 002, 003)</option>
+                    <option value="4">4 (0001, 0002, 0003)</option>
+                  </select>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={generateCodes}
+                  disabled={!codeGenerator.prefix || !codeGenerator.from || !codeGenerator.to}
+                  className="h-7 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  {t('modal.addCodes')}
+                </Button>
+              </div>
+              <p className="text-xs text-blue-600 dark:text-blue-400">
+                {t('modal.generatorExample')}: {codeGenerator.prefix || 'SPD-'}{String(codeGenerator.from || 1).padStart(parseInt(codeGenerator.digits) || 3, '0')} ... {codeGenerator.prefix || 'SPD-'}{String(codeGenerator.to || 100).padStart(parseInt(codeGenerator.digits) || 3, '0')}
+              </p>
+            </div>
+          )}
+
+          <Textarea
+            value={simpleCatalog.codes}
+            onChange={(e) => setSimpleCatalog(prev => ({ ...prev, codes: e.target.value }))}
+            placeholder={t('modal.codesPlaceholder')}
+            className="min-h-[80px] text-sm resize-none"
+          />
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {t('modal.example')}: SPD-001, SWT-042, BIZ-088, TOR-155
+          </p>
+        </div>
 
         <CatalogInput
           icon={Palette}
