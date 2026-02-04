@@ -399,23 +399,172 @@ const ScanConfigModal = ({
           </p>
         </div>
 
-        <CatalogInput
-          icon={Palette}
-          label={t('modal.colors')}
-          value={simpleCatalog.colors}
-          onChange={(v) => setSimpleCatalog(prev => ({ ...prev, colors: v }))}
-          placeholder={t('modal.colorsPlaceholder')}
-          example={t('modal.colorsExample')}
-        />
+        {/* Colors with Picker */}
+        <div className="space-y-2">
+          <Label className="flex items-center justify-between">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                <Palette className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              {t('modal.colors')}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 h-7 px-2"
+            >
+              <Wand2 className="w-3.5 h-3.5 mr-1" />
+              {t('modal.selectColors')}
+            </Button>
+          </Label>
 
-        <CatalogInput
-          icon={Ruler}
-          label={t('modal.sizes')}
-          value={simpleCatalog.sizes}
-          onChange={(v) => setSimpleCatalog(prev => ({ ...prev, sizes: v }))}
-          placeholder={t('modal.sizesPlaceholder')}
-          example="XS, S, M, L, XL, 36, 38, 40, 42"
-        />
+          {/* Color Picker Panel */}
+          {showColorPicker && (
+            <div className="bg-pink-50 dark:bg-pink-900/20 rounded-lg p-3 border border-pink-200 dark:border-pink-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium text-pink-800 dark:text-pink-300">
+                  <Palette className="w-4 h-4" />
+                  {t('modal.popularColors')}
+                </div>
+                <span className="text-xs text-pink-600 dark:text-pink-400">
+                  {t('modal.selected')}: {selectedColors.size}
+                </span>
+              </div>
+              <div className="grid grid-cols-5 gap-2">
+                {predefinedColors.map((c) => (
+                  <button
+                    key={c.name}
+                    onClick={() => toggleColor(c.name)}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-lg border-2 transition-all ${
+                      selectedColors.has(c.name)
+                        ? 'border-pink-500 bg-pink-100 dark:bg-pink-900/40'
+                        : 'border-transparent hover:border-pink-200 dark:hover:border-pink-700'
+                    }`}
+                  >
+                    <div 
+                      className="w-6 h-6 rounded-full border border-gray-300 dark:border-gray-600"
+                      style={{ backgroundColor: c.color }}
+                    />
+                    <span className="text-[10px] text-gray-700 dark:text-gray-300 text-center leading-tight">
+                      {c.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  size="sm"
+                  onClick={addSelectedColors}
+                  disabled={selectedColors.size === 0}
+                  className="h-7 bg-pink-600 hover:bg-pink-700 text-white"
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  {t('modal.addSelected')}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <Textarea
+            value={simpleCatalog.colors}
+            onChange={(e) => setSimpleCatalog(prev => ({ ...prev, colors: e.target.value }))}
+            placeholder={t('modal.colorsPlaceholder')}
+            className="min-h-[80px] text-sm resize-none"
+          />
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {t('modal.example')}: {t('modal.colorsExample')}
+          </p>
+        </div>
+
+        {/* Sizes with Picker */}
+        <div className="space-y-2">
+          <Label className="flex items-center justify-between">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                <Ruler className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              {t('modal.sizes')}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSizePicker(!showSizePicker)}
+              className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 h-7 px-2"
+            >
+              <Wand2 className="w-3.5 h-3.5 mr-1" />
+              {t('modal.selectSizes')}
+            </Button>
+          </Label>
+
+          {/* Size Picker Panel */}
+          {showSizePicker && (
+            <div className="bg-violet-50 dark:bg-violet-900/20 rounded-lg p-3 border border-violet-200 dark:border-violet-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium text-violet-800 dark:text-violet-300">
+                  <Ruler className="w-4 h-4" />
+                  {t('modal.standardSizes')}
+                </div>
+                <span className="text-xs text-violet-600 dark:text-violet-400">
+                  {t('modal.selected')}: {selectedSizes.size}
+                </span>
+              </div>
+              
+              {sizeCategories.map((category) => (
+                <div key={category.name} className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-violet-700 dark:text-violet-400">
+                      {category.label}
+                    </span>
+                    <button
+                      onClick={() => selectAllSizesInCategory(category.sizes)}
+                      className="text-[10px] text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300"
+                    >
+                      {t('modal.selectAll')}
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {category.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => toggleSize(size)}
+                        className={`px-2 py-1 text-xs rounded border transition-all ${
+                          selectedSizes.has(size)
+                            ? 'bg-violet-500 text-white border-violet-500'
+                            : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-violet-200 dark:border-violet-700 hover:border-violet-400'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              
+              <div className="flex justify-end pt-2">
+                <Button
+                  size="sm"
+                  onClick={addSelectedSizes}
+                  disabled={selectedSizes.size === 0}
+                  className="h-7 bg-violet-600 hover:bg-violet-700 text-white"
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  {t('modal.addSelected')}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <Textarea
+            value={simpleCatalog.sizes}
+            onChange={(e) => setSimpleCatalog(prev => ({ ...prev, sizes: e.target.value }))}
+            placeholder={t('modal.sizesPlaceholder')}
+            className="min-h-[80px] text-sm resize-none"
+          />
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {t('modal.example')}: XS, S, M, L, XL, 36, 38, 40, 42
+          </p>
+        </div>
 
         <CatalogInput
           icon={Package}
