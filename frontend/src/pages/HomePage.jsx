@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Zap, Clock, Monitor, BarChart3, Facebook, Instagram, Youtube, ArrowRight, Sparkles, Link2, Tag, Palette, Ruler, Package, CheckCircle, AlertCircle, Loader2, X } from 'lucide-react';
+import { Zap, Clock, Monitor, BarChart3, Facebook, Instagram, Youtube, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
-import { Textarea } from '../components/ui/textarea';
-import { Label } from '../components/ui/label';
+import ScanConfigModal from '../components/ScanConfigModal';
 
 const TikTokIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
