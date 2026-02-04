@@ -54,7 +54,10 @@ Create a complete, pixel-perfect clone of the website `soclix.pl`. The applicati
 #### Pre-configuration Modal
 - [x] **Available on BOTH Homepage and Streams page**
 - [x] Opens when user enters URL and clicks "Find/Сканировать"
-- [x] Fields: Product codes, Colors, Sizes, Keywords
+- [x] **Extended table format for product catalog:**
+  - Each row: Product Code | Colors for this code | Sizes for this code
+  - Add/remove rows dynamically
+  - Separate keywords field at the bottom
 - [x] Full translations for all 6 languages
 - [x] Success/Error states with animations
 - [x] Redirects to Streams page after processing
