@@ -1,19 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Search, Download, RefreshCw, Eye, EyeOff, X, Plus, Link2, Sparkles,
-  User, ExternalLink, Filter, Loader2, CheckCircle, AlertCircle,
-  Package, Palette, Ruler, Tag, Warehouse, Hash, Calendar, MessageSquare
+  Search, Download, RefreshCw, Eye, EyeOff, X, Plus, Link2,
+  User, ExternalLink, Filter,
+  Package, Palette, Ruler, Tag, Hash, Calendar, MessageSquare
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Checkbox } from '../components/ui/checkbox';
 import { Badge } from '../components/ui/badge';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
-import { Textarea } from '../components/ui/textarea';
-import { Label } from '../components/ui/label';
 import { mockProfiles, mockStreamOrders } from '../data/streamOrdersData';
+import ScanConfigModal from '../components/ScanConfigModal';
 
 const StreamsPage = () => {
   const { t } = useTranslation();
@@ -29,15 +27,7 @@ const StreamsPage = () => {
   const [streamUrl, setStreamUrl] = useState('');
   const [showConfigModal, setShowConfigModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [processStatus, setProcessStatus] = useState(null); // 'success' | 'error' | null
-
-  // Pre-configuration catalog
-  const [catalog, setCatalog] = useState({
-    codes: '',
-    colors: '',
-    sizes: '',
-    keywords: '',
-  });
+  const [processStatus, setProcessStatus] = useState(null);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -56,27 +46,16 @@ const StreamsPage = () => {
   };
 
   // Handle stream processing with catalog
-  const handleProcessStream = async () => {
+  const handleProcessStream = async (catalogData) => {
     setIsProcessing(true);
     setProcessStatus(null);
     
-    // Simulate AI processing with the catalog data
     try {
-      // Parse catalog into arrays for AI context
-      const catalogData = {
-        codes: catalog.codes.split(',').map(s => s.trim()).filter(Boolean),
-        colors: catalog.colors.split(',').map(s => s.trim()).filter(Boolean),
-        sizes: catalog.sizes.split(',').map(s => s.trim()).filter(Boolean),
-        keywords: catalog.keywords.split(',').map(s => s.trim()).filter(Boolean),
-      };
-
       console.log('Processing stream with catalog:', { url: streamUrl, catalog: catalogData });
 
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Here would be the actual API call to process the stream
-      // For now, we'll just show success
       setProcessStatus('success');
       
       setTimeout(() => {
