@@ -22,14 +22,6 @@ const HomePage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStatus, setProcessStatus] = useState(null);
 
-  // Pre-configuration catalog
-  const [catalog, setCatalog] = useState({
-    codes: '',
-    colors: '',
-    sizes: '',
-    keywords: '',
-  });
-
   const features = [
     { id: 1, icon: Zap, titleKey: 'features.aiPowered.title', descKey: 'features.aiPowered.description' },
     { id: 2, icon: Clock, titleKey: 'features.saveHours.title', descKey: 'features.saveHours.description' },
@@ -50,18 +42,11 @@ const HomePage = () => {
   };
 
   // Handle stream processing with catalog
-  const handleProcessStream = async () => {
+  const handleProcessStream = async (catalogData) => {
     setIsProcessing(true);
     setProcessStatus(null);
     
     try {
-      const catalogData = {
-        codes: catalog.codes.split(',').map(s => s.trim()).filter(Boolean),
-        colors: catalog.colors.split(',').map(s => s.trim()).filter(Boolean),
-        sizes: catalog.sizes.split(',').map(s => s.trim()).filter(Boolean),
-        keywords: catalog.keywords.split(',').map(s => s.trim()).filter(Boolean),
-      };
-
       console.log('Processing stream with catalog:', { url: streamUrl, catalog: catalogData });
 
       // Simulate processing delay
@@ -83,27 +68,6 @@ const HomePage = () => {
       setIsProcessing(false);
     }
   };
-
-  // Catalog input component
-  const CatalogInput = ({ icon: Icon, label, value, onChange, placeholder, example }) => (
-    <div className="space-y-2">
-      <Label className="flex items-center gap-2 text-sm font-medium">
-        <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-          <Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-        </div>
-        {label}
-      </Label>
-      <Textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="min-h-[80px] text-sm resize-none"
-      />
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        {t('modal.example')}: {example}
-      </p>
-    </div>
-  );
 
   return (
     <div className="min-h-screen">
