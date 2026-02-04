@@ -280,6 +280,13 @@
     "to": "To",
     "digits": "Digits",
     "addCodes": "Add",
-    "generatorExample": "Result"
+    "generatorExample": "Result",
+    "selectColors": "Select",
+    "popularColors": "Popular colors",
+    "selected": "Selected",
+    "addSelected": "Add",
+    "selectSizes": "Select",
+    "standardSizes": "Standard sizes",
+    "selectAll": "Select all"
   }
 }
